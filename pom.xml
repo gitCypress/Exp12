@@ -2,18 +2,20 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>exp.cypress</groupId>
-  <artifactId>Exp12</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+<!--  三个参数唯一标识一个项目  -->
+  <groupId>exp.cypress</groupId> <!--  组织唯一标识  -->
+  <artifactId>exp12</artifactId> <!--  项目唯一标识  -->
+  <version>1.0-SNAPSHOT</version> <!--  组织唯一标识  -->
+  <packaging>jar</packaging> <!--  项目版本号，分为SNAPSHOT和RELEASE-->
 
-  <name>Exp12</name>
+  <name>exp12</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+<!-- 依赖配置 -->
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
