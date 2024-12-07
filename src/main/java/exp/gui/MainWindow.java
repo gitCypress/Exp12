@@ -1,6 +1,9 @@
 package exp.gui;
 
+import exp.entity.FileData;
+
 import javax.swing.*;
+
 
 public class MainWindow {
     private JPanel rootPanel;
@@ -8,34 +11,57 @@ public class MainWindow {
     private JTextArea textArea;
     private JMenuBar menuBar;
     private JPanel fileContent;
-    private JPanel fileTable;
     private JPanel searchType;
-    private JTextField textField1;
+    private JTextField searchPrompt;
     private JButton searchButton;
-    private JTable SearchAnswer;
+    private JTable searchAnswer;
     private JTabbedPane ContentTab;
     private JLabel ClassNameInputTips;
     private JTable ContentTable;
     private JScrollPane ScrollBase1;
     private JScrollPane ScrollBase2;
-    private JMenu file;
-    private JMenuItem open, save;
+    private JScrollPane sAScrollPane;
+    private JTabbedPane Search;
+    private JPanel SearchByText;
+    private JComboBox<String> classNameComboBox;
+    private JButton searchButtonCB;
+    private JPanel SearchByCombobox;
+    private JTable searchAnswerCB;
+    private JLabel BCBLabel;
+    private JScrollPane SBCBScrollPane;
 
     public MainWindow(){
 
-        this.file = new JMenu("File");
-        this.open = new JMenuItem("Open");
-        this.save = new JMenuItem("Save");
+        JMenu file = new JMenu("File");
+        JMenuItem open = new JMenuItem("Open");
+        JMenuItem save = new JMenuItem("Save");
 
-        this.menuBar.add(this.file);
-        this.file.add(open);
-        this.file.add(save);
+        this.menuBar.add(file);
+        file.add(open);
+        file.add(save);
 
-        var openListener = new OpenAction(textArea, ContentTable);
-        this.open.addActionListener(openListener);
+        var rdStorage = new FileData();  // 共享数据类
+
+        var openListener = new OpenAction(textArea, ContentTable, rdStorage, classNameComboBox);
+        open.addActionListener(openListener);
+
+        var searchListener = new SearchAction(searchPrompt, searchAnswer, rdStorage);
+        this.searchButton.addActionListener(searchListener);
+
+        var searchListenerCB = new SearchAction(searchAnswerCB, rdStorage, classNameComboBox);
+        this.searchButtonCB.addActionListener(searchListenerCB);
+
+        var saveListener = new SaveAction(textArea);
+        save.addActionListener(saveListener);
 
         // 文本框初始化语句
         this.textArea.setText("Go to File->Open to select a data file.");
+
+        JFrame frame = new JFrame("IrisDataTool");
+        frame.setContentPane(this.rootPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 400);
+        frame.setVisible(true);
     }
 
     public static void main(String[] args) {

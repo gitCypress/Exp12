@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import exp.entity.Iris;
+import exp.gui.OpenAction;
 
-public class TXTInput implements ReadFile {
+public class DataRead implements ReadFile {
 
     List<Iris> irisList = new ArrayList<Iris>();
     String plainText;
@@ -25,6 +26,7 @@ public class TXTInput implements ReadFile {
             // 文件读取
             this.fr = new FileReader(filepath);
             this.br = new BufferedReader(this.fr);
+            OpenAction.isOpen = true;
 
             String line = "";
             while((line = br.readLine()) != null) output.append(line).append("\n");

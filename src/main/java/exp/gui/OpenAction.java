@@ -1,18 +1,16 @@
 package exp.gui;
 
-import exp.entity.Iris;
-import exp.io.TXTInput;
+import exp.entity.FileData;
+import exp.io.DataRead;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class OpenAction implements ActionListener {
 
@@ -20,18 +18,25 @@ public class OpenAction implements ActionListener {
     private FileNameExtensionFilter DATA_TXT_filter;
 
     private String irisesInfo;
-    private List<Iris> irisesResolvedInfo;
+    private FileData fileData;
 
     private JTextArea textOutArea;
     private JTable contentTable;
+    private JComboBox<String> comboBox;
 
-    public OpenAction(JTextArea textOutArea, JTable contentTable){
+    public OpenAction(JTextArea textOutArea, JTable contentTable, FileData fileData, JComboBox<String> comboBox){
         this.textOutArea = textOutArea;
         this.contentTable = contentTable;
+        this.fileData = fileData;
+        this.comboBox = comboBox;
     }
+
+    public static boolean isOpen = false;
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+//        System.out.println("openAction:" + this.fileData);
 
         // 初始化文件选择器，并为其绑定文件类型过滤器和默认路径
         this.chooser = new JFileChooser();
@@ -50,12 +55,14 @@ public class OpenAction implements ActionListener {
             String filePath = chooser.getSelectedFile().getAbsolutePath();  // 获取用户打开文件的绝对路径
 
             // PlainText部分显示
-            this.irisesInfo = new TXTInput().getPlainTextFromFile(filePath);  // 使用 txt 读取类处理
+            this.irisesInfo = new DataRead().getPlainTextFromFile(filePath);  // 使用 txt 读取类处理
             textOutArea.setText(this.irisesInfo);
 
             //Table部分显示
-            this.irisesResolvedInfo = new TXTInput().getResolvedDataFromFile(filePath);
+            this.fileData.resolvedData = new DataRead().getResolvedDataFromFile(filePath);
+            var irisesResolvedInfo = this.fileData.resolvedData;
             String[] columnNames = {"Sepal Length", "Sepal Width", "Petal Length", "Petal Width", "Class Name"};
+            Set<String> classNameSet = new HashSet<>();
 
             Object[][] data = new Object[irisesResolvedInfo.size()][columnNames.length];
             for (int i = 0; i < irisesResolvedInfo.size(); i++){
@@ -65,6 +72,12 @@ public class OpenAction implements ActionListener {
                 data[i][2] = ir.getPetalLength();
                 data[i][3] = ir.getPetalWidth();
                 data[i][4] = ir.getClassName();
+                classNameSet.add(ir.getClassName());
+            }
+
+            for (var str : classNameSet){
+                comboBox.addItem(str);
+//                System.out.println(str);
             }
 
             DefaultTableModel model = new DefaultTableModel(data,columnNames);
@@ -72,6 +85,7 @@ public class OpenAction implements ActionListener {
 
         }
 
+//        System.out.println("oA---\n" + this.fileData.resolvedData);
     }
 
     public String getIrisesInfo() {
